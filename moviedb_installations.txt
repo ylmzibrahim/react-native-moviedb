@@ -1,0 +1,18 @@
+commands =>
+cd MobileProgramming
+npx react-native init moviedb
+npm install @react-navigation/native
+npm install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save
+npm install @react-navigation/stack
+npm install @react-navigation/material-bottom-tabs react-native-paper
+npm install --save react-native-vector-icons
+npm install -g react-native-cli
+react-native link react-native-vector-icons
+npm install react-native-youtube -S
+npx react=native link react-native-youtube
+npm install --save @react-native-async-storage/async-storage
+
+npm install react-native-pixel-perfect
+
+npx react-native start
+npx react-native run-android
