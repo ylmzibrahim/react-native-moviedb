@@ -1,9 +1,9 @@
 import React from 'react';
-import Routes from './sources/routes/routes';
+import RootStack from './sources/routes/RootStack';
 
 export default function App() {
   return (
-    <Routes />
+    <RootStack />
   )
 }
 

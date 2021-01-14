@@ -32,6 +32,9 @@
 		B317C3D10EEF4E1DA1CFF7D6 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE9D52710CD744B2A1F7E974 /* Octicons.ttf */; };
 		3B55AB95C9BD472689707618 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E1CDCE7F1D24807953AAFA4 /* SimpleLineIcons.ttf */; };
 		37AC8934310641328FE66D30 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1AB37468D75402198C26AC0 /* Zocial.ttf */; };
+		785425A01F3B4CB39DE680B0 /* FredokaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DCE078A25894806989346AC /* FredokaOne-Regular.ttf */; };
+		8B5F5491F4BA4E9CBF0DA9B1 /* FredokaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 138DB71586294A9CA440E8EE /* FredokaOne-Regular.ttf */; };
+		2BC8D0A9E2204BED9B77DB33 /* PottaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95F7D3206EA84EAFB919B753 /* PottaOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,9 @@
 		DE9D52710CD744B2A1F7E974 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		2E1CDCE7F1D24807953AAFA4 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		F1AB37468D75402198C26AC0 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1DCE078A25894806989346AC /* FredokaOne-Regular.ttf */ = {isa = PBXFileReference; name = "FredokaOne-Regular.ttf"; path = "../sources/assets/fonts/FredokaOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		138DB71586294A9CA440E8EE /* FredokaOne-Regular.ttf */ = {isa = PBXFileReference; name = "FredokaOne-Regular.ttf"; path = "../assets/fonts/FredokaOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		95F7D3206EA84EAFB919B753 /* PottaOne-Regular.ttf */ = {isa = PBXFileReference; name = "PottaOne-Regular.ttf"; path = "../assets/fonts/PottaOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +215,9 @@
 				DE9D52710CD744B2A1F7E974 /* Octicons.ttf */,
 				2E1CDCE7F1D24807953AAFA4 /* SimpleLineIcons.ttf */,
 				F1AB37468D75402198C26AC0 /* Zocial.ttf */,
+				1DCE078A25894806989346AC /* FredokaOne-Regular.ttf */,
+				138DB71586294A9CA440E8EE /* FredokaOne-Regular.ttf */,
+				95F7D3206EA84EAFB919B753 /* PottaOne-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,6 +377,9 @@
 				B317C3D10EEF4E1DA1CFF7D6 /* Octicons.ttf in Resources */,
 				3B55AB95C9BD472689707618 /* SimpleLineIcons.ttf in Resources */,
 				37AC8934310641328FE66D30 /* Zocial.ttf in Resources */,
+				785425A01F3B4CB39DE680B0 /* FredokaOne-Regular.ttf in Resources */,
+				8B5F5491F4BA4E9CBF0DA9B1 /* FredokaOne-Regular.ttf in Resources */,
+				2BC8D0A9E2204BED9B77DB33 /* PottaOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

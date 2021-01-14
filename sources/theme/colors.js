@@ -4,10 +4,12 @@ const colors = {
     blackColor: '#000000',
     appBackgroundColor: '#323643',
     shadowColor: '#000',
-    headerBackground: '#071E3d',
+    headerBackground: '#071E3D',
     buttonBackground: '#E43A19',
     orangeColor: '#F09030',
-    naviBlueColor: '#0E0D26'
+    naviBlueColor: '#0E0D26',
+    mangoColor: '#ffa751',
+    turquoiseGreenColor: '#009387'
 }
 
 export default colors;
