@@ -7,11 +7,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../components/context';
 import Users from '../model/users';
 import Color from '../theme/Colors';
+import fetchClientToken from '../utils/authentication'
+import {saveClientToken, getClientToken, deleteClientToken, saveUserToken, getUserToken, deleteUserToken,} from '../utils/handleTokens'
+import {sendLoginRequest , sendRegisterRequest , sendLogoutRequest , getProfile} from '../utils/apiRequests'
 
 const SignInScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry: true,
@@ -25,14 +28,14 @@ const SignInScreen = ({navigation}) => {
         if( val.trim().length >= 4 ) {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: true,
                 isValidUser: true
             });
         } else {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: false,
                 isValidUser: false
             });
@@ -76,30 +79,65 @@ const SignInScreen = ({navigation}) => {
         }
     }
 
-    const loginHandle = (userName, password) => {
+    const loginHandle = async (userName, password) => {
 
-        const foundUser = Users.filter( item => {
-            return userName == item.username && password == item.password;
-        } );
-
-        if ( data.username.length == 0 || data.password.length == 0 ) {
+        if ( data.email.length == 0 || data.email.length == 0 ) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
                 {text: 'Okay'}
             ]);
             return;
         }
 
-        if ( foundUser.length == 0 ) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+        let client_token = await getClientToken();
+        console.log(client_token);
+
+        if(!client_token){
+            const clientTokenResponse = await fetchClientToken();
+            if(!clientTokenResponse) return Alert.alert('Error', 'Couldnt communicate with server. Try again later.');
+            await saveClientToken(clientTokenResponse.access_token);
+        }
+
+        client_token = await getClientToken();
+
+        const response = await sendLoginRequest(data.email, data.password, client_token);
+        console.log(response);
+
+        if(response == 401){
+            //client_token expired. Get a new one.
+            await deleteClientToken();
+            const clientTokenResponse = await fetchClientToken();
+            if(!clientTokenResponse) return Alert.alert('Error', 'Couldnt communicate with server. Try again later.');
+            await saveClientToken(clientTokenResponse.access_token);
+            //try to login again
+            client_token = await getClientToken();
+            const lastRequestTry = await sendLoginRequest(data.email, data.password, client_token);
+            if(lastRequestTry == 409){
+                return Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+                    {text: 'Okay'}
+                ]);
+            }
+            if(lastRequestTry == 401){
+                return Alert.alert('An error happened', 'Please try again later.', [
+                    {text: 'Okay'}
+                ]);
+            }
+        }
+
+        if(response == 409){
+            return Alert.alert('Invalid User!', 'Username or password is incorrect.', [
                 {text: 'Okay'}
             ]);
-            return;
         }
+
+        await deleteUserToken();
+        await saveUserToken(response.access_token);
+
         // Successfully Signed In
         //Alert.alert('Successfully Signed In!', 'Welcome to the MovieDB app.', [
         //    {text: 'Okay'}
         //]);
-        navigation.navigate('HomeScreen')
+
+        navigation.navigate('HomeScreen');
     }
 
     return (
@@ -201,7 +239,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {loginHandle( data.username, data.password )}}
+                    onPress={() => {loginHandle( data.email, data.password )}}
                 >
                 <LinearGradient
                     colors={['#ffe259', '#ffa751']}

@@ -15,6 +15,7 @@
     "@react-navigation/material-bottom-tabs": "^5.3.10",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
+    "axios": "^0.21.1",
     "expo": "^40.0.0",
     "expo-app-loading": "^1.0.1",
     "expo-font": "^8.4.0",
@@ -28,6 +29,7 @@
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
+    "react-native-sensitive-info": "^6.0.0-alpha.9",
     "react-native-vector-icons": "^7.1.0",
     "react-native-youtube": "^2.0.1"
   },
