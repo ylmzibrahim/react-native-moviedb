@@ -96,7 +96,7 @@ function HomeScreen({ navigation }) {
             <View style={styles.header}>
                 <Ionicons name='menu' color={Color.whiteColor} size={30} style={styles.headerIcons} />
                 <Text style={styles.title}>Movie DB</Text>
-                <FontAwesome name='user-circle' color={Color.whiteColor} size={30} style={styles.headerIcons} />
+                <FontAwesome name='user-circle' color={Color.whiteColor} size={30} style={styles.headerIcons} onPress={() => navigation.navigate('ProfileScreen')} />
             </View>
 
             <View style={styles.genresView}>
