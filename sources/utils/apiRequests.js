@@ -110,7 +110,202 @@ const getProfile = async (userToken) => {
     });
 }
 
-exports.sendLoginRequest = sendLoginRequest;
-exports.sendRegisterRequest = sendRegisterRequest;
-exports.sendLogoutRequest = sendLogoutRequest;
-exports.getProfile = getProfile;
+
+const fetchGenres = async (clientToken) => {
+    const config = {
+        method: 'GET',
+        url : apiURL + '/api/genre/list',
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + clientToken
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const fetchMoviesByGenre = async (genreId, clientToken) => {
+    const config = {
+        method: 'GET',
+        url : apiURL + `/api/genre/${genreId}/movies`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + clientToken
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const fetchMovieDetails = async (movieId, clientToken) => {
+    const config = {
+        method: 'GET',
+        url : apiURL + `/api/movie/${movieId}`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + clientToken
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const getUserLists = async (userToken) => {
+    const config = {
+        method: 'GET',
+        url : apiURL + `/api/lists/`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + userToken
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const createUserWatchlist = async (userToken) => {
+    const config = {
+        method: 'POST',
+        url : apiURL + `/api/list/create`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + userToken
+        },
+        data: {
+            'name': 'Watchlist',
+            'visible' : 1
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const fetchUserWatchlistDetails = async (watchlistId, userToken) => {
+    const config = {
+        method: 'GET',
+        url : apiURL + `/api/list/${watchlistId}`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + userToken
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const addToUserWatchlist = async (watchlistId, movieId, type, userToken) => {
+    const config = {
+        method: 'POST',
+        url : apiURL + `/api/list/${watchlistId}/add/${movieId}`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + userToken
+        },
+        data: {
+            'type': type
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+}
+
+const removeFromUserWatchlist = async (watchlistId, movieId, type, userToken) => {
+    const config = {
+        method: 'POST',
+        url : apiURL + `/api/list/${watchlistId}/remove/${movieId}`,
+        headers: { 
+            'Accept': 'application/json', 
+            'Authorization': 'Bearer ' + userToken
+        },
+        data: {
+            'type': type
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status <= 409;
+        }
+    }
+    
+    return await axios(config).then( (response) => {
+        if(response.status == 200) return response.data;
+        return response.status;
+    }).catch((error) => {
+        console.log(error);
+        return -1;
+    });
+} 
+
+exports.sendLoginRequest          = sendLoginRequest;
+exports.sendRegisterRequest       = sendRegisterRequest;
+exports.sendLogoutRequest         = sendLogoutRequest;
+exports.getProfile                = getProfile;
+exports.fetchGenres               = fetchGenres;
+exports.fetchMoviesByGenre        = fetchMoviesByGenre;
+exports.fetchMovieDetails         = fetchMovieDetails;
+exports.getUserLists              = getUserLists;
+exports.createUserWatchlist       = createUserWatchlist;
+exports.fetchUserWatchlistDetails = fetchUserWatchlistDetails;
+exports.addToUserWatchlist        = addToUserWatchlist;
+exports.removeFromUserWatchlist   = removeFromUserWatchlist;

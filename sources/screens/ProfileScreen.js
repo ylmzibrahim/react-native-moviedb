@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, SafeAreaView, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet, Alert} from 'react-native';
 import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { sendLogoutRequest } from '../utils/apiRequests';
+import { getUserToken, deleteUserToken } from '../utils/handleTokens'
 //import Share from 'react-native-share';
 //import files from '../assets/filesBase64';
 
@@ -24,6 +26,16 @@ function ProfileScreen ({ navigation }){
     }
   };
 */}
+
+  const handleLogout = async () => {
+    const user_token = await getUserToken();
+    const response = await sendLogoutRequest(user_token);
+    if(response == 401) {
+      return Alert.alert('Error!', 'An error happened.', 'okay');
+    }
+    await deleteUserToken();
+    return navigation.navigate('SignInScreen');
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,40 +87,25 @@ function ProfileScreen ({ navigation }){
       </View>
 
       <View style={styles.menuWrapper}>
-      <TouchableRipple onPress={() => console.log('Pressed')}>
-          <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Favorites</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => console.log('Pressed')}>
-          <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Watched</Text>
-          </View>
-        </TouchableRipple>
-        {/*<TouchableRipple onPress={() => console.log('Pressed')}>
-          <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Support</Text>
-          </View>
-        </TouchableRipple>*/}
-        <TouchableRipple onPress={() => navigation.navigate('EditProfileScreen')}>
-          <View style={styles.menuItem}>
-            <Icon name="account-settings-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Edit Profile</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => console.log('Pressed')}>
+     
+        <TouchableRipple onPress={() => handleLogout()}>
           <View style={styles.menuItem}>
             <Icon name="logout" color="#FF6347" size={25}/>
             <Text style={styles.menuItemText}>Log Out</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('HomeScreen')}>
+          <View style={styles.menuItem}>
+            <Icon name="logout" color="#FF6347" size={25}/>
+            <Text style={styles.menuItemText}>Home Screen</Text>
           </View>
         </TouchableRipple>
       </View>
     </SafeAreaView>
   );
 };
+
+
 
 
 const styles = StyleSheet.create({
@@ -161,3 +158,25 @@ const styles = StyleSheet.create({
       lineHeight: 26,
     },
 });
+
+
+/*
+<TouchableRipple onPress={() => navigation.navigate('WatchlistScreen')}>
+<View style={styles.menuItem}>
+  <Icon name="heart-outline" color="#FF6347" size={25}/>
+  <Text style={styles.menuItemText}>Favorites</Text>
+</View>
+</TouchableRipple>
+<TouchableRipple onPress={() => console.log('Pressed')}>
+<View style={styles.menuItem}>
+  <Icon name="credit-card" color="#FF6347" size={25}/>
+  <Text style={styles.menuItemText}>Watched</Text>
+</View>
+</TouchableRipple>
+<TouchableRipple onPress={() => navigation.navigate('EditProfileScreen')}>
+<View style={styles.menuItem}>
+  <Icon name="account-settings-outline" color="#FF6347" size={25}/>
+  <Text style={styles.menuItemText}>Edit Profile</Text>
+</View>
+</TouchableRipple>
+*/

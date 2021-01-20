@@ -131,7 +131,6 @@ const SignInScreen = ({navigation}) => {
 
         await deleteUserToken();
         await saveUserToken(response.access_token);
-
         // Successfully Signed In
         //Alert.alert('Successfully Signed In!', 'Welcome to the MovieDB app.', [
         //    {text: 'Okay'}
