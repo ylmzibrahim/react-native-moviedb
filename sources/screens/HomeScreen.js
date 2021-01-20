@@ -5,24 +5,24 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Var from '../routes/Variables';
 import Color from '../theme/Colors';
 import { perfectSize } from '../theme/AppScreen';
+import { fetchGenres, fetchMoviesByGenre } from '../utils/apiRequests';
+import { getClientToken } from '../utils/handleTokens.js'
 
 function HomeScreen({ navigation }) {
 
     const [genres, setGenres] = useState([]);
-    const [nowPlaying, setNowPlaying] = useState([]);
-    const [popular, setPopular] = useState([]);
-    const [topRated, setTopRated] = useState([]);
-    const [upComing, setUpComing] = useState([]);
+    const [actionMovies, setActionMovies] = useState([]);
+    const [fantasyMovies, setFantasyMovies] = useState([]);
+    const [animationMovies, setAnimationMovies] = useState([]);
+    const [dramaMovies, setDramaMovies] = useState([]);
 
     // const getGenres = async () => {try{} catch{}};
     useEffect(() => {
         async function getGenres() {
             try {
-              let response = await fetch(
-                Var.host + 'genre/movie/list?api_key=' + Var.api_key_tmdb
-              );
-              let json = await response.json();
-              setGenres(json.genres);
+              const client_token = await getClientToken();
+              const genres = await fetchGenres(client_token);
+              setGenres(genres);
             } catch (error) {
               console.error(error);
             }
@@ -31,70 +31,63 @@ function HomeScreen({ navigation }) {
         // console.log(genres); // it's for check if genres are getting or not
 
         // Getting now playing movies from API
-        async function getNowPlaying() {
+        async function getActionMovies() {
             try {
-              let response = await fetch(
-                Var.host + 'movie/now_playing?api_key=' + Var.api_key_tmdb
-              );
-              let json = await response.json();
-              setNowPlaying(json.results);
+                const client_token = await getClientToken();
+                const movies = await fetchMoviesByGenre(2, client_token);
+                setActionMovies(movies.data);
             } catch (error) {
               console.error(error);
             }
         }
-        getNowPlaying();
+        getActionMovies();
 
         // Getting popular movies from API
-        async function getPopular() {
+        async function getFantasyMovies() {
             try {
-              let response = await fetch(
-                Var.host + 'movie/popular?api_key=' + Var.api_key_tmdb
-              );
-              let json = await response.json();
-              setPopular(json.results);
+                const client_token = await getClientToken();
+                const movies = await fetchMoviesByGenre(1, client_token);
+                setFantasyMovies(movies.data);
             } catch (error) {
               console.error(error);
             }
         }
-        getPopular();
+        getFantasyMovies();
 
         // Getting top rated movies from API
-        async function getTopRated() {
+        async function getAnimationMovies() {
             try {
-              let response = await fetch(
-                Var.host + 'movie/top_rated?api_key=' + Var.api_key_tmdb
-              );
-              let json = await response.json();
-              setTopRated(json.results);
+                const client_token = await getClientToken();
+                const movies = await fetchMoviesByGenre(4, client_token);
+                setAnimationMovies(movies.data);
             } catch (error) {
               console.error(error);
             }
         }
-        getTopRated();
+        getAnimationMovies();
 
         // Getting up comming movies from API
-        async function getUpComing() {
+        async function getDramaMovies() {
             try {
-              let response = await fetch(
-                Var.host + 'movie/upcoming?api_key=' + Var.api_key_tmdb
-              );
-              let json = await response.json();
-              setUpComing(json.results);
+                const client_token = await getClientToken();
+                const movies = await fetchMoviesByGenre(6, client_token);
+                setDramaMovies(movies.data);
             } catch (error) {
               console.error(error);
             }
         }
-        getUpComing();
+        getDramaMovies();
 
     }, [])
 
     // Here is Home Screen
+    //<Ionicons name='menu' color={Color.whiteColor} size={30} style={styles.headerIcons} onPress={() => navigation.navigate('SignUpScreen')}/>
     return(
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={Color.appBackgroundColor} barStyle='light-content' />
 
             <View style={styles.header}>
-                <Ionicons name='menu' color={Color.whiteColor} size={30} style={styles.headerIcons} />
+                
                 <Text style={styles.title}>Movie DB</Text>
                 <FontAwesome name='user-circle' color={Color.whiteColor} size={30} style={styles.headerIcons} onPress={() => navigation.navigate('ProfileScreen')} />
             </View>
@@ -106,18 +99,23 @@ function HomeScreen({ navigation }) {
                     showsHorizontalScrollIndicator={false}
                     data={genres}
                     keyExtractor={item => item.id.toString()}
-                    renderItem={({item, index}) => <RenderItemGenres item={item} />}
+                    renderItem={({item, index}) => (
+                        <TouchableOpacity onPress={() => navigation.navigate('GenreScreen' , item)} >
+                            <RenderItemGenres item={item}/>
+                        </TouchableOpacity>
+                    )
+                    }
                 />
             </View>
 
             <ScrollView>
-                <Text style={styles.movieClass}>NOW PLAYING</Text>
+                <Text style={styles.movieClass}>ACTION MOVIES</Text>
                 <FlatList
                     contentContainerStyle={{paddingHorizontal: 10}}
                     style={{maxHeight: 250}}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    data={nowPlaying}
+                    data={actionMovies}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item, index}) => (
                         <TouchableOpacity onPress={() => navigation.navigate('DetailsScreen', item)} >
@@ -126,13 +124,13 @@ function HomeScreen({ navigation }) {
                     )}
                 />
 
-                <Text style={styles.movieClass}>POPULAR</Text>
+                <Text style={styles.movieClass}>FANTASY MOVIES</Text>
                 <FlatList
                     contentContainerStyle={{paddingHorizontal: 10}}
                     style={{maxHeight: 250}}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    data={popular}
+                    data={fantasyMovies}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item, index}) => (
                         <TouchableOpacity onPress={() => navigation.navigate('DetailsScreen', item)} >
@@ -141,13 +139,13 @@ function HomeScreen({ navigation }) {
                     )}
                 />
 
-                <Text style={styles.movieClass}>TOP RATED</Text>
+                <Text style={styles.movieClass}>ANIMATION MOVIES</Text>
                 <FlatList
                     contentContainerStyle={{paddingHorizontal: 10}}
                     style={{maxHeight: 250}}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    data={topRated}
+                    data={animationMovies}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item, index}) => (
                         <TouchableOpacity onPress={() => navigation.navigate('DetailsScreen', item)} >
@@ -156,13 +154,13 @@ function HomeScreen({ navigation }) {
                     )}
                 />
 
-                <Text style={styles.movieClass}>UP COMING</Text>
+                <Text style={styles.movieClass}>DRAMA MOVIES</Text>
                 <FlatList
                     contentContainerStyle={{paddingHorizontal: 10}}
                     style={{maxHeight: 250}}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    data={upComing}
+                    data={dramaMovies}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item, index}) => (
                         <TouchableOpacity onPress={() => navigation.navigate('DetailsScreen', item)} >
@@ -182,12 +180,13 @@ function HomeScreen({ navigation }) {
     }
 
     function RenderItemMovies({item}) {
-        let year = item.release_date.split('-');
+        const dateObj = new Date(Date.parse(item.air));
+        const fullReleaseDate = dateObj.getFullYear() + ' ' + (parseInt(dateObj.getMonth()) + 1) + ' ' + dateObj.getDate();
+        const releaseYear = dateObj.getFullYear();
         return (
-            <ImageBackground source={{uri: Var.posterHost + item.poster_path}} style={styles.postView} resizeMode={'cover'}>
+            <ImageBackground source={{uri: item.photo_url}} style={styles.postView} resizeMode={'cover'}>
                 <Text style={styles.movieTitle} numberOfLines={2} ellipsizeMode={'tail'}>{ item.title }</Text>
-                <Text style={styles.movieVoteAverage}>{ item.vote_average }</Text>
-                <Text style={styles.movieReleaseDate}>{ year[0] }</Text>
+                <Text style={styles.movieReleaseDate}>{ releaseYear }</Text>
             </ImageBackground>
         )
     }
@@ -203,6 +202,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: Color.whiteColor,
+        paddingHorizontal: 10,
         fontSize: perfectSize(25),
         fontWeight: 'bold',
         textAlign: 'center',

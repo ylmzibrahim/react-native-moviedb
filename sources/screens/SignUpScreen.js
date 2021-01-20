@@ -5,12 +5,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Color from '../theme/Colors';
+import { sendRegisterRequest } from '../utils/apiRequests';
+import { getClientToken , saveUserToken } from '../utils/handleTokens';
 
 const SignInScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
         username: '',
         password: '',
+        mail: '',
         confirm_password: '',
         check_textInputChange: false,
         secureTextEntry: true,
@@ -40,6 +43,13 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const handleMailChange = (val) => {
+        setData({
+            ...data,
+            mail: val
+        });
+    }
+
     const handleConfirmPasswordChange = (val) => {
         setData({
             ...data,
@@ -51,7 +61,7 @@ const SignInScreen = ({navigation}) => {
         setData({
             ...data,
             secureTextEntry: !data.secureTextEntry
-        });
+        });''
     }
 
     const updateConfirmSecureTextEntry = () => {
@@ -59,6 +69,35 @@ const SignInScreen = ({navigation}) => {
             ...data,
             confirm_secureTextEntry: !data.confirm_secureTextEntry
         });
+    }
+
+    const handleSigningUp = async () => {
+        let clientToken = await getClientToken();
+        const responseData = await sendRegisterRequest(data.username, data.email, data.password, data.confirm_password, clientToken);
+        if (responseData == 401) {
+            await deleteClientToken();
+            const clientTokenResponse = await fetchClientToken();
+            if(!clientTokenResponse) return Alert.alert('Error', 'Couldnt communicate with server. Try again later.');
+            await saveClientToken(clientTokenResponse.access_token);
+            client_token = await getClientToken();
+            const lastRequestTry = await sendRegisterRequest(data.username, data.email, data.password, data.confirm_password, clientToken);
+            if(lastRequestTry == 409){
+                return Alert.alert('Error!', 'Please check your credentials and make sure you used a strong password.', [
+                    {text: 'Okay'}
+                ]);
+            }
+            if(lastRequestTry == 401){
+                return Alert.alert('An error happened', 'Please try again later.', [
+                    {text: 'Okay'}
+                ]);
+            }
+        } if (responseData == 409) {
+            return Alert.alert('Error!', 'Please check your credentials and make sure you used a strong password.', [
+                {text: 'Okay'}
+            ]);
+        }
+        await saveUserToken(responseData.access_token);
+        return navigation.navigate('HomeScreen');
     }
 
     return (
@@ -98,9 +137,34 @@ const SignInScreen = ({navigation}) => {
                 : null}
             </View>
 
-            <Text style={[styles.text_footer, {
-                marginTop: 35
-            }]}>Password</Text>
+            <Text style={styles.text_footer}>E-mail</Text>
+            <View style={styles.action}>
+                <FontAwesome 
+                    name="user-o"
+                    color="#05375a"
+                    size={20}
+                />
+                <TextInput 
+                    placeholder="Your email"
+                    style={styles.textInput}
+                    autoCapitalize="none"
+                    onChangeText={(val) => handleMailChange(val)}
+                />
+                {data.check_textInputChange ? 
+                <Animatable.View
+                    animation="bounceIn"
+                >
+                    <Feather 
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                    />
+                </Animatable.View>
+                : null}
+            </View>
+
+
+            <Text style={styles.text_footer}>Password</Text>
             <View style={styles.action}>
                 <Feather 
                     name="lock"
@@ -133,9 +197,7 @@ const SignInScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
 
-            <Text style={[styles.text_footer, {
-                marginTop: 35
-            }]}>Confirm Password</Text>
+            <Text style={styles.text_footer}>Confirm Password</Text>
             <View style={styles.action}>
                 <Feather 
                     name="lock"
@@ -178,7 +240,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {}}
+                    onPress={() => handleSigningUp()}
                 >
                 <LinearGradient
                     colors={['#ffe259', '#ffa751']}

@@ -1,23 +1,52 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { ScrollView, ImageBackground, TouchableOpacity, FlatList, Image, View, Text , StyleSheet} from 'react-native'
 import Color from '../theme/Colors'
 import { perfectSize } from '../theme/AppScreen'
-import Var from '../routes/Variables'
+import genreList from '../utils/genreList'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as Animatable from 'react-native-animatable'
+import { fetchMovieDetails, getUserLists, createUserWatchlist } from '../utils/apiRequests'
+import { getClientToken, getUserToken } from '../utils/handleTokens'
 
 export default function DetailsScreen({ navigation, route }) {
 
-    const title = route.params.title
-    const poster_path = route.params.poster_path
-    const overview = route.params.overview
-    const genre_ids = route.params.genre_ids
-    let year = route.params.release_date.split('-');
+    const movieId = route.params.id;
+    const title = route.params.title;
+    const posterUrl = route.params.photo_url;
+    const description = route.params.description;
+    const dateObj = new Date(Date.parse(route.params.air));
+    const releaseYear = dateObj.getFullYear();
+    const [genre, setGenre] = useState([genreList[parseInt(route.params.pivot.genre_id)]]);
+    const [watchlistId, setWatchlistId] = useState()
+
+    useEffect(() => {
+        const getGenres = async () => {
+            const client_token = await getClientToken();
+            const response = await fetchMovieDetails(movieId, client_token);
+            if(response != 401) setGenre(response.genres);
+        }
+        getGenres();
+
+        /*const getUserWatchlistDetails = async () => {
+            const user_token = await getUserToken();
+            let response = await getUserLists(user_token);
+            console.log(response);
+            let watchlist = response.filter(item => item.name == 'Watchlist');
+            if(watchlist.length == 0) {
+                await createUserWatchlist(user_token);
+                response = await getUserLists(user_token);
+                watchlist = response.filter(item => item.name == 'Watchlist');
+            }
+            watchlist = watchlist[0];
+            setWatchlistId(watchlist.id);
+        }
+        getUserWatchlistDetails();*/
+    } , [])
 
     return (
         <ScrollView style={styles.container}>
 
-            <ImageBackground source={{uri: Var.posterHost + poster_path}} style={styles.poster}>
+            <ImageBackground source={{uri: posterUrl}} style={styles.poster}>
                 <TouchableOpacity onPress={()=>navigation.goBack()}>
                     <Ionicons name='arrow-back' size={perfectSize(50)} color={Color.whiteColor}/>
                 </TouchableOpacity>
@@ -25,26 +54,26 @@ export default function DetailsScreen({ navigation, route }) {
                 <Animatable.View animation='fadeInUp' style={styles.detailsContainer}>
                     <View style={styles.marker} />
                     <Text style={styles.title}>{ title }</Text>
-                    <Text style={styles.stats}>{ year[0] }</Text>
+                    <Text style={styles.stats}>{ releaseYear }</Text>
                     <TouchableOpacity style={styles.buttonContainer}>
                         <Text style={styles.buttonTitle}>Add to watchlist</Text>
                     </TouchableOpacity>
                     <View style={styles.headerContainer}>
                         <Text style={styles.headline}>Storyline</Text>
                     </View>
-                    <Text style={styles.details}>{ overview }</Text>
+                    <Text style={styles.details}>{ description }</Text>
                 
                     <View style={styles.headerContainer}>
                         <Text style={styles.headline}>Genres</Text>
                         <FlatList 
-                            data={ genre_ids }
+                            data={ genre }
                             style={styles.list}
-                            keyExtractor={(item,index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({item}) => (
+                            renderItem={ ( {item} ) => (
                                 <TouchableOpacity style={styles.genreContainer}>
-                                    <Text style={styles.genre}>{item}</Text>
+                                    <Text style={styles.genre}>{item.name}</Text>
                                 </TouchableOpacity>
                             )}
                         />

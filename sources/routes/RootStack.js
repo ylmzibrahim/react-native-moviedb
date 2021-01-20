@@ -8,6 +8,8 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import GenreScreen from '../screens/GenreScreen';
+import WatchlistScreen from '../screens/WatchlistScreen'
 
 const Stack = new createStackNavigator();
 
@@ -15,12 +17,14 @@ function RootStack() {
     return(
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
                 <Stack.Screen name='SplashScreen' component={SplashScreen} />
                 <Stack.Screen name='HomeScreen' component={HomeScreen} />
+                <Stack.Screen name='GenreScreen' component={GenreScreen} />
                 <Stack.Screen name='DetailsScreen' component={DetailsScreen} />
                 <Stack.Screen name='SignInScreen' component={SignInScreen} />
                 <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
+                <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
+                <Stack.Screen name='WatchlistScreen' component={WatchlistScreen} />
                 <Stack.Screen name='EditProfileScreen' component={EditProfileScreen} />
                 
             </Stack.Navigator> 
